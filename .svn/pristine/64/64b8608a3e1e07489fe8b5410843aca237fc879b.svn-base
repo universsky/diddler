@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/main_layout" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:id="@+id/packet_number_layout" android:gravity="center" android:background="#FF888888">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/packet_number_label" android:paddingLeft="5px" android:text="@string/packet_number" android:textColor="#FFFFFF00"></TextView>
+        <TextView android:id="@+id/packet_number_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingLeft="5px" android:textColor="#FFFFFF00"></TextView>
+    </LinearLayout>
+	<LinearLayout android:id="@+id/network_layout"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="vertical">
+		<TextView android:id="@+id/layer_3_label"
+			android:layout_height="wrap_content" android:text="@string/layer_3"
+			android:layout_width="fill_parent" android:gravity="center" android:textColor="#FF888888"></TextView>
+		<LinearLayout android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:id="@+id/network_protocol_layout">
+			<TextView android:layout_width="wrap_content" android:id="@+id/network_protocol_label"
+				android:text="@string/network_protocol" android:layout_height="wrap_content"></TextView>
+			<TextView android:layout_width="wrap_content" android:id="@+id/network_protocol_text"
+				android:layout_height="wrap_content" android:paddingLeft="5px"></TextView>
+		</LinearLayout>
+		<LinearLayout android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:id="@+id/network_src_layout">
+			<TextView android:layout_width="wrap_content" android:id="@+id/src_network_label"
+				android:text="@string/network_src" android:layout_height="wrap_content"></TextView>
+			<TextView android:layout_width="wrap_content" android:id="@+id/src_network_text"
+				android:layout_height="wrap_content" android:paddingLeft="5px"></TextView>
+		</LinearLayout>
+		<LinearLayout android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:id="@+id/network_dst_layout">
+			<TextView android:layout_width="wrap_content" android:id="@+id/dst_network_label"
+				android:text="@string/network_dst" android:layout_height="wrap_content"></TextView>
+			<TextView android:layout_width="wrap_content" android:id="@+id/dst_network_text"
+				android:layout_height="wrap_content" android:paddingLeft="5px"></TextView>
+		</LinearLayout>
+	</LinearLayout>
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:id="@+id/transport_layout"
+		android:orientation="vertical">
+		<TextView android:layout_height="wrap_content" android:id="@+id/layer_4_label"
+			android:text="@string/layer_4" android:layout_width="fill_parent"
+			android:gravity="center" android:textColor="#FF888888"></TextView>
+		<LinearLayout android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:id="@+id/transport_protocol_layout">
+			<TextView android:layout_width="wrap_content"
+				android:id="@+id/transport_protocol_label" android:text="@string/transport_protocol"
+				android:layout_height="wrap_content"></TextView>
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/transport_protocol_text" android:paddingLeft="5px"></TextView>
+		</LinearLayout>
+		<LinearLayout android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:id="@+id/transport_src_layout">
+			<TextView android:layout_width="wrap_content" android:id="@+id/src_transport_label"
+				android:text="@string/transport_src" android:layout_height="wrap_content"></TextView>
+			<TextView android:layout_width="wrap_content" android:id="@+id/src_transport_text"
+				android:layout_height="wrap_content" android:paddingLeft="5px"></TextView>
+		</LinearLayout>
+		<LinearLayout android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:id="@+id/transport_dst_layout">
+			<TextView android:layout_width="wrap_content" android:id="@+id/dst_transport_label"
+				android:text="@string/transport_dst" android:layout_height="wrap_content"></TextView>
+			<TextView android:layout_width="wrap_content" android:id="@+id/dst_transport_text"
+				android:layout_height="wrap_content" android:paddingLeft="5px"></TextView>
+		</LinearLayout>
+	</LinearLayout>
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:id="@+id/application_layout"
+		android:orientation="vertical">
+		<TextView android:layout_height="wrap_content" android:id="@+id/layer_5_label"
+			android:text="@string/layer_5" android:layout_width="fill_parent"
+			android:gravity="center" android:textColor="#FF888888"></TextView>
+		<LinearLayout android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:id="@+id/application_protocol_layout">
+			<TextView android:layout_width="wrap_content"
+				android:text="@string/application_protocol" android:layout_height="wrap_content"
+				android:id="@+id/application_protocol_label"></TextView>
+			<TextView android:layout_width="wrap_content"
+				android:id="@+id/application_protocol_text" android:layout_height="wrap_content" android:paddingLeft="5px"></TextView>
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

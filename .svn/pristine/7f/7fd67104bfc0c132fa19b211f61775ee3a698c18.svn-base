@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:id="@+id/main_layout" android:background="#FF888888"
+	android:orientation="vertical">
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:id="@+id/params_layout">
+		<TextView android:id="@+id/params_label"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textColor="#FF000000" android:layout_marginLeft="10px"
+			android:layout_marginTop="5px" android:textStyle="bold"
+			android:text="@string/parameter_label_text"></TextView>
+		<EditText android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:id="@+id/params_text"
+			android:maxLines="1" android:lines="1" android:layout_marginLeft="15px"
+			android:layout_marginTop="5px" android:layout_marginRight="5px"
+			android:text="-i any -p" android:clickable="false"
+			android:focusableInTouchMode="false" android:focusable="false"
+			android:inputType="none"></EditText>
+	</LinearLayout>
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:id="@+id/buttons_layout" android:gravity="left"
+		android:layout_marginBottom="2px" android:layout_marginTop="2px"
+		android:layout_marginLeft="2px">
+		<Button android:layout_height="wrap_content"
+			android:layout_gravity="left" android:layout_width="wrap_content"
+			android:id="@+id/start_button" android:textStyle="bold"
+			android:text="@string/start_button_text"></Button>
+		<Button android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:id="@+id/read_button"
+			android:layout_gravity="center" android:textStyle="bold"
+			android:text="@string/reader_button_text"></Button>
+		<Button android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:id="@+id/stop_button"
+			android:textStyle="bold" android:text="@string/stop_button_text"></Button>
+		<ProgressBar android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/running_progressbar"
+			android:indeterminate="true" android:visibility="invisible"
+			android:layout_marginLeft="20px"></ProgressBar>
+	</LinearLayout>
+	<LinearLayout android:layout_height="match_parent"
+		android:layout_width="fill_parent" android:orientation="vertical"
+		android:background="#FF0000FF" android:id="@+id/output_layout">
+		<TextView android:gravity="center" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:textColor="#FFFFFF00"
+			android:paddingBottom="3px" android:textStyle="bold" android:id="@+id/stdo_text"
+			android:text="@string/standard_output_text"></TextView>
+		<ScrollView android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:layout_marginLeft="5px"
+			android:layout_marginRight="5px" android:id="@+id/scroller">
+			<TextView android:layout_height="fill_parent" android:id="@+id/output_text"
+				android:maxLength="4096" android:textColor="#FF00FF00"
+				android:layout_width="fill_parent" android:text="@string/welcome_text"></TextView>
+		</ScrollView>
+	</LinearLayout>
+</LinearLayout>

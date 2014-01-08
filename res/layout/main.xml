@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:id="@+id/main_layout" android:background="#FF000000"
+	android:orientation="vertical">
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:id="@+id/params_layout">
+
+		<TextView
+		    android:id="@+id/params_label"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="10px"
+		    android:layout_marginTop="5px"
+		    android:text="@string/parameter_label_text"
+		    android:textColor="#FFFFFFFF"
+		    android:textStyle="bold" >
+</TextView>
+
+		<EditText
+		    android:id="@+id/params_text"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="15px"
+		    android:layout_marginRight="5px"
+		    android:layout_marginTop="5px"
+		    android:clickable="true"
+		    android:editable="true"
+		    android:focusable="false"
+		    android:focusableInTouchMode="false"
+		    android:inputType="text"
+		    android:lines="1"
+		    android:maxLines="1"
+		    android:text=" -Avv -s 0 -i any tcp[20:4]=0x47455420"
+		    android:textSize="11sp">
+		    <!--  android:text=" -Xvv -i any tcp[20:4]=0x47455420" 
+		          android:text=" -vvennSs 0 -i any tcp[20:2]=0x4745 or tcp[20:2]=0x4854"-->
+		    
+
+</EditText>
+	</LinearLayout>
+	<LinearLayout android:layout_width="match_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:id="@+id/buttons_layout" android:gravity="left"
+		android:layout_marginBottom="2px" android:layout_marginTop="2px"
+		android:layout_marginLeft="2px">
+		<Button android:layout_height="wrap_content"
+			android:layout_gravity="left" android:layout_width="wrap_content"
+			android:id="@+id/start_button" android:textStyle="bold"
+			android:text="@string/start_button_text"></Button>
+		<Button android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:id="@+id/stop_button"
+			android:textStyle="bold" android:text="@string/stop_button_text"></Button>
+
+		<Button
+		    android:id="@+id/read_button"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/reader_button_text"
+		    android:textStyle="bold" />
+
+		<ProgressBar android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:id="@+id/running_progressbar"
+			android:indeterminate="true" android:visibility="invisible"
+			android:layout_marginLeft="20px"></ProgressBar>
+	</LinearLayout>
+	<LinearLayout android:layout_height="match_parent"
+		android:layout_width="fill_parent" android:orientation="vertical"
+		android:background="#FF000000" android:id="@+id/output_layout">
+
+		<TextView
+		    android:id="@+id/stdo_text"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center"
+		    android:paddingBottom="3px"
+		    android:text="@string/standard_output_text"
+		    android:textColor="#FFFFFF00"
+		    android:textStyle="bold" >
+</TextView>
+		<ScrollView android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:layout_marginLeft="5px"
+			android:layout_marginRight="5px" android:id="@+id/scroller"
+			android:clickable="true"
+			android:focusableInTouchMode="true">
+			<TextView android:layout_height="fill_parent" android:id="@+id/output_text"
+				android:maxLength="102400" android:textColor="#FF00FF00"
+				android:layout_width="fill_parent" android:text="@string/welcome_text"
+				android:autoLink="web"
+				android:linksClickable="true"
+				android:saveEnabled="true"
+				android:clickable="true">
+			</TextView>
+		</ScrollView>
+	</LinearLayout>
+</LinearLayout>

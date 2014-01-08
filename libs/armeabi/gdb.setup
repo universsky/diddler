@@ -1,0 +1,2 @@
+set solib-search-path C:/Users/Sergio/workspace/Shark/obj/local/armeabi
+directory C:/android-ndk-windows/platforms/android-8/arch-arm/usr/include C:/Users/Sergio/workspace/Shark/jni/libpcap C:/android-ndk-windows/sources/cxx-stl/system/include C:/Users/Sergio/workspace/Shark/jni C:/android-ndk-windows/sources/cxx-stl/system
