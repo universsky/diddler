@@ -1,9 +1,0 @@
-<resources>
- 
-    <string-array name="verbose">
-    <item>Verbose</item>
-    <item>Very verbose</item>
-    <item>Ultra verbose</item>
-    </string-array>
-    
-</resources>

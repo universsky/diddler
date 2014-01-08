@@ -1,9 +1,0 @@
-<resources>
- 
-    <string-array name="verbose">
-    <item>Detallado</item>
-    <item>Muy detallado</item>
-    <item>Ultra detallado</item>
-    </string-array>
-    
-</resources>
