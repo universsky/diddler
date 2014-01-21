@@ -1,20 +1,16 @@
 
 package universsky.diddler;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.jnetpcap.PcapHeader;
-import org.jnetpcap.packet.JScanner;
-import org.jnetpcap.packet.PcapPacket;
-import org.jnetpcap.packet.format.FormatUtils;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -25,12 +21,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Environment;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * Allows an Android app to interact with the standard output of a TCPdump
@@ -45,8 +46,8 @@ public class TCPdumpHandler {
 	
 	// Your Main activity's ids for the View.
 	private static final int paramsId = R.id.params_text;
-	private static final int outputId = R.id.output_text;
-	private static final int scrollerId = R.id.scroller;
+	//private static final int outputId = R.id.output_text;
+	//private static final int scrollerId = R.id.scroller;
 	private static final int pbarId = R.id.running_progressbar;
 
 	// TextView's refresh rate in ms.
@@ -54,10 +55,11 @@ public class TCPdumpHandler {
 
 	// Byte[] buffer's size.
 	
-	private static final int MaxSize = 20480;
+	private static final int MaxSize = 10240;
 	private int refreshRate = 100;
-	private int bufferSize = 2048;
+	private int bufferSize = 1024;
 	private int countPackets = 0;
+	private int MAX_COUNT = 200;
 
 	private boolean notificationEnabled = false;
 	private boolean refreshingActive = false;
@@ -71,10 +73,12 @@ public class TCPdumpHandler {
 	private NotificationManager nManager = null;
 	private Notification notification = null;
 
-	private TextView outputText = null;
-	private View scroller = null;
 	private ProgressBar pbar = null;
 	private EditText params = null;
+	private List<String> itemList = new ArrayList<String>();
+	private List<String> itemList2 = new ArrayList<String>();
+	private ListView list = null;
+	private Activity activity = null;
 	
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -104,278 +108,116 @@ public class TCPdumpHandler {
 //						if (outputText.length() + buffer.length() >= MaxSize)
 //							outputText.setText("");
 						
+						
+						/**
 						if (outputText.length() + buffer.length >= MaxSize)
 							outputText.setText("");
-						
-						// Refreshing the output TextView
-						// Show the GET/HTTP data on the Scroll View of android
-						
-						
-						/* Append the specified text to the TextView's display buffer, 
-						 * upgrading it to BufferType.
-						 * EDITABLE if it was not already editable. 
-						 */
-						 
-//						String sBuffer = new String(buffer,"UTF-8");
-//						outputText.append(sBuffer);
-						/*
-						if(buffer.indexOf("IP") != -1){
-							buffer = "["+  countPackets + "]" +  " Request Header: \n";
-							countPackets ++;
-						}
 						*/
 						
-						//读IP所在行的next line
-//						buffer = tcpdump.getInputStream().readLine();
-						//继续读nextline, 是为GET /path 数据行
-//						buffer = tcpdump.getInputStream().readLine();
-						/*
-						if(buffer.indexOf("GET") != -1){
-							//buffer = buffer.substring( buffer.indexOf("GET"), buffer.indexOf("HTTP/1.1"));
-							buffer = buffer.substring( buffer.indexOf("GET") );
+						// 防止无限加载，导致内存溢出
+						
+						if ( itemList.size() > MAX_COUNT ) {
+							// 把itemList置空
+							itemList.clear();	
+							itemList2.clear();
 						}
-						*/
 						
-						
-						
-//						if(buffer.indexOf("Host") != -1){
-//							hostName = buffer.substring(buffer.indexOf("Host") + 6);
-//						}
-						
-//						if( !("".equals(hostName)) && !("".equals(getPath)) ) {
-//							String reqUrl = "http://" + hostName + getPath ; 
-//							countPackets ++;
-//							String appendStr = "["+ countPackets + "]" + reqUrl + "\n";
-//							outputText.append(appendStr);
-//						}
 						
 					} catch (IOException e) {
 						stopRefreshing();
 						return;
 					}
-//					outputText.append(buffer + "\n");
-					//outputText.append(new String(buffer,"ISO-8859-1"));
-					// get rid of non-ASCII chars
 					String bufferStr = new String(buffer);
-					
-					/*
-					String pattern = "[^\\x00-\\x7F]";
-					Pattern p = Pattern.compile(pattern);
-					Matcher m = p.matcher(bufferStr);
-					String outBuffer = m.replaceAll("");
-					outputText.append(outBuffer);
-					*/
-					
-					/**
-					 * Open Declaration java.util.regex.Pattern
-
-
-
-Java supports a subset of Perl 5 regular expression syntax. An important gotcha is that Java has no regular expression literals, and uses plain old string literals instead. This means that you need an extra level of escaping. For example, the regular expression \s+ has to be represented as the string "\\s+". 
-
-Escape sequences
-\  Quote the following metacharacter (so \. matches a literal .). 
-\Q  Quote all following metacharacters until \E. 
-\E  Stop quoting metacharacters (started by \Q). 
-\\  A literal backslash. 
-\\uhhhh  The Unicode character U+hhhh (in hex). 
-\xhh  The Unicode character U+00hh (in hex). 
-\cx  The ASCII control character ^x (so \cH would be ^H, U+0008). 
-\a  The ASCII bell character (U+0007). 
-\e  The ASCII ESC character (U+001b). 
-\f  The ASCII form feed character (U+000c). 
-\n  The ASCII newline character (U+000a). 
-\r  The ASCII carriage return character (U+000d). 
-\t  The ASCII tab character (U+0009). 
-
-
-Character classes
-It's possible to construct arbitrary character classes using set operations: [abc]  Any one of a, b, or c. (Enumeration.) 
-[a-c]  Any one of a, b, or c. (Range.) 
-[^abc]  Any character except a, b, or c. (Negation.) 
-[[a-f][0-9]]  Any character in either range. (Union.) 
-[[a-z]&&[jkl]]  Any character in both ranges. (Intersection.) 
-
-
-Most of the time, the built-in character classes are more useful: \d  Any digit character (see note below). 
-\D  Any non-digit character (see note below). 
-\s  Any whitespace character (see note below). 
-\S  Any non-whitespace character (see note below). 
-\w  Any word character (see note below). 
-\W  Any non-word character (see note below). 
-\p{NAME}  Any character in the class with the given NAME.  
-\P{NAME}  Any character not in the named class.  
-
-
-Note that these built-in classes don't just cover the traditional ASCII range. For example, \w is equivalent to the character class [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}]. For more details see Unicode TR-18, and bear in mind that the set of characters in each class can vary between Unicode releases. If you actually want to match only ASCII characters, specify the explicit characters you want; if you mean 0-9 use [0-9] rather than \d, which would also include Gurmukhi digits and so forth. 
-
-There are also a variety of named classes: 
-
-Unicode category names, prefixed by Is. For example \p{IsLu} for all uppercase letters. 
-POSIX class names. These are 'Alnum', 'Alpha', 'ASCII', 'Blank', 'Cntrl', 'Digit', 'Graph', 'Lower', 'Print', 'Punct', 'Upper', 'XDigit'. 
-Unicode block names, as used by forName(String) prefixed by In. For example \p{InHebrew} for all characters in the Hebrew block. 
-Character method names. These are all non-deprecated methods from Character whose name starts with is, but with the is replaced by java. For example, \p{javaLowerCase}. 
-Quantifiers
-Quantifiers match some number of instances of the preceding regular expression. *  Zero or more. 
-?  Zero or one. 
-+  One or more. 
-{n}  Exactly n. 
-{n,}  At least n. 
-{n,m}  At least n but not more than m. 
-
-
-Quantifiers are "greedy" by default, meaning that they will match the longest possible input sequence. There are also non-greedy quantifiers that match the shortest possible input sequence. They're same as the greedy ones but with a trailing ?: *?  Zero or more (non-greedy). 
-??  Zero or one (non-greedy). 
-+?  One or more (non-greedy). 
-{n}?  Exactly n (non-greedy). 
-{n,}?  At least n (non-greedy). 
-{n,m}?  At least n but not more than m (non-greedy). 
-
-
-Quantifiers allow backtracking by default. There are also possessive quantifiers to prevent backtracking. They're same as the greedy ones but with a trailing +: *+  Zero or more (possessive). 
-?+  Zero or one (possessive). 
-++  One or more (possessive). 
-{n}+  Exactly n (possessive). 
-{n,}+  At least n (possessive). 
-{n,m}+  At least n but not more than m (possessive). 
-
-
-Zero-width assertions
-^  At beginning of line. 
-$  At end of line. 
-\A  At beginning of input. 
-\b  At word boundary. 
-\B  At non-word boundary. 
-\G  At end of previous match. 
-\z  At end of input. 
-\Z  At end of input, or before newline at end. 
-
-
-Look-around assertions
-Look-around assertions assert that the subpattern does (positive) or doesn't (negative) match after (look-ahead) or before (look-behind) the current position, without including the matched text in the containing match. The maximum length of possible matches for look-behind patterns must not be unbounded. 
-
-(?=a)  Zero-width positive look-ahead. 
-(?!a)  Zero-width negative look-ahead. 
-(?<=a)  Zero-width positive look-behind. 
-(?<!a)  Zero-width negative look-behind. 
-
-
-Groups
-(a)  A capturing group. 
-(?:a)  A non-capturing group. 
-(?>a)  An independent non-capturing group. (The first match of the subgroup is the only match tried.) 
-\n  The text already matched by capturing group n. 
-
-
-See group() for details of how capturing groups are numbered and accessed. 
-
-Operators
-ab  Expression a followed by expression b. 
-a|b  Either expression a or expression b. 
-
-
-Flags
-(?dimsux-dimsux:a)  Evaluates the expression a with the given flags enabled/disabled. 
-(?dimsux-dimsux)  Evaluates the rest of the pattern with the given flags enabled/disabled. 
-
-
-The flags are: i CASE_INSENSITIVE case insensitive matching 
-d UNIX_LINES only accept '\n' as a line terminator 
-m MULTILINE allow ^ and $ to match beginning/end of any line 
-s DOTALL allow . to match '\n' ("s" for "single line") 
-u UNICODE_CASE enable Unicode case folding 
-x COMMENTS allow whitespace and comments 
-
-
-Either set of flags may be empty. For example, (?i-m) would turn on case-insensitivity and turn off multiline mode, (?i) would just turn on case-insensitivity, and (?-m) would just turn off multiline mode. 
-
-Note that on Android, UNICODE_CASE is always on: case-insensitive matching will always be Unicode-aware. 
-
-There are two other flags not settable via this mechanism: CANON_EQ and LITERAL. Attempts to use CANON_EQ on Android will throw an exception. 
-
-Implementation notes
-The regular expression implementation used in Android is provided by ICU. The notation for the regular expressions is mostly a superset of those used in other Java language implementations. This means that existing applications will normally work as expected, but in rare cases Android may accept a regular expression that is not accepted by other implementations. 
-
-In some cases, Android will recognize that a regular expression is a simple special case that can be handled more efficiently. This is true of both the convenience methods in String and the methods in Pattern.
-
-See Also
-Matcher 
-Summary
-Constants 
-int CANON_EQ This constant specifies that a character in a Pattern and a character in the input string only match if they are canonically equivalent. 
-int CASE_INSENSITIVE This constant specifies that a Pattern is matched case-insensitively. 
-int COMMENTS This constant specifies that a Pattern may contain whitespace or comments. 
-int DOTALL This constant specifies that the '.' meta character matches arbitrary characters, including line endings, which is normally not the case. 
-int LITERAL This constant specifies that the whole Pattern is to be taken literally, that is, all meta characters lose their meanings. 
-int MULTILINE This constant specifies that the meta characters '^' and '$' match only the beginning and end of an input line, respectively. 
-int UNICODE_CASE This constant specifies that a Pattern that uses case-insensitive matching will use Unicode case folding. 
-int UNIX_LINES This constant specifies that a pattern matches Unix line endings ('\n') only against the '.', '^', and '$' meta characters. 
-
-0-127 the ASCII code range, in hex, 0x00-0x7F
-					 */
 					
 					/**
 					 * @author chenguangjian
 					 * 		   2014.1.8
 					 * 正则匹配出需要的数据包段
 					 */
+					
 					String pStr = "GET\\s+[\\x00-\\x7F]*\\nHost:[\\x00-\\x7F]*\\n\\n";
 //					String pStr = "GET\\s+[\\x00-\\x7F]*";
 					Pattern p = Pattern.compile(pStr);
-					Matcher m = p.matcher(bufferStr);
-					String mStr = "";
-					while(m.find()){
-						int s = m.start();
-						int e = m.end();
-						mStr += "\n[" + countPackets + "]" + 
-								bufferStr.substring(s, e) +
-								"------------------------------------------\n\n";
+					Matcher m0 = p.matcher(bufferStr);
+//					String mStr = "";
+					while(m0.find()){
+						String item = "";
+						int s = m0.start();
+						int e = m0.end();
+						item = bufferStr.substring(s, e);
+						itemList.add(item);
+//						mStr += "\n[" + countPackets + "]" + 
+//								bufferStr.substring(s, e);
 						countPackets++;
 					}
-					outputText.append(mStr);
 					
+					//outputText.append(mStr);
 					
-					/**
-					String[] packetArray = {};
-					String regularExpression = "\n\n";
-					packetArray = sBuffer.split(regularExpression);
-					
-					
-					String sLs = "\n------------------------------------\n\n";
-					for(String s:packetArray){
-						countPackets++;
-						outputText.append("[" + countPackets + "]" + s + sLs);
+					final ArrayList<HashMap<String,Object>> listItem = new ArrayList<HashMap<String,Object>>();
+					final ArrayList<HashMap<String,Object>> listItem2 = new ArrayList<HashMap<String,Object>>();
+					for(int i = 0; i < itemList.size(); i++){
+						HashMap<String,Object> map = new HashMap<String,Object>();
+						java.text.DateFormat fmt = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+						String s =  fmt.format(new Date());
+						map.put("item_title", "[ " + s + "]" + "第" + i + "个HTTP请求:  " );
 						
-						
-					    String[] linesOfPacket = s.split("\n");
-					    String url  = "";
-					    String path = "";
-					    String host = "";
-					    for(String l:linesOfPacket){
-					    	if(l.indexOf("GET") != -1 ){
-					    		path = l.substring(l.indexOf("GET "), l.length() - l.indexOf("HTTP/1.1")-1);
-					    	}
-					    	if(l.indexOf("Host") != -1){
-					    		host = l.substring(l.indexOf("Host:"));
-					    	}
-					    }
-					    url ="http://" + host + path;
-					    // Append the output string
-					    String reqUrl = "Request URL: " + url + "\n";
-					    outputText.append(reqUrl + s + sLs);
-					   
-					}
-					
-					 */
-					
-					// Forces the scrollbar to be at the bottom.
-					scroller.post(new Runnable() {
-						public void run() {
-							scroller.scrollTo(outputText.getMeasuredWidth(),
-									outputText.getMeasuredHeight());
+						//获取GET path
+						String item = itemList.get(i);
+						map.put("item_text0", item);
+						listItem2.add(map);
+						String request = "";
+						Matcher m1 = Pattern.compile("GET\\s(.*)\\sHTTP/1.1").matcher(item);
+						if (m1.find()){
+							request = item.substring(m1.start(),m1.end());						
+							map.put("item_text", request);
+							listItem.add(map);
 						}
-					});
-
+					}
+					//生成适配器的Item和动态数组对应的元素
+					/**
+					 * android.widget.SimpleAdapter.SimpleAdapter(
+					 * Context context, 
+					 * List<? extends Map<String, ?>> data, 
+					 * int resource, 
+					 * String[] from, 
+					 * int[] to
+					 * )
+					 */
+					android.widget.SimpleAdapter listItemAdapter = new android.widget.SimpleAdapter(
+							mContext,     	// Context
+							listItem,	// List
+							R.layout.list_items, // int resource 
+							new String[]{"item_title","item_text"}, // String[] from 
+							new int[]{R.id.ItemTitle,R.id.ItemText} // int[] to
+							);
+					//Sets the data behind this ListView. 
+					list.setAdapter(listItemAdapter);
+					
+					 //添加点击  
+			        list.setOnItemClickListener(new OnItemClickListener(){
+						@Override
+						public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+								long arg3) {
+							CharSequence item = (CharSequence) listItem2.get(arg2).get("item_text0");
+							//Open Declaration Toast android.widget.Toast.makeText(Context context, CharSequence text, int duration)
+							
+							//Toast.makeText(mContext, item, Toast.LENGTH_LONG).show();
+							
+							Intent intent=new Intent();
+							intent.setClass( activity, ItemActivity.class );
+							Bundle mBundle=new Bundle();
+							/*
+							 * Inserts a CharSequence value into the mapping of this Bundle, replacing any existing value for the given key. Either key or value may be null.
+							 */
+							mBundle.putCharSequence("item",  item);
+							intent.putExtras(mBundle);
+							mContext.startActivity(intent);
+						}
+						 
+			         });
+					
+					
+					
 				}
 			} catch (IOException e) {
 				stopRefreshing();
@@ -386,16 +228,10 @@ int UNIX_LINES This constant specifies that a pattern matches Unix line endings 
 	};
 
 	
-	////////////////////////////////////////////////////////////////////////////////
-	
-	
-	
-	
-	
-	
 	public TCPdumpHandler(TCPdump tcpdump, Context mContext, Activity activity,
 			boolean notificationEnabled) {
 
+		this.activity = activity;
 		// Acessing the app's settings.
 		settings = mContext.getSharedPreferences(GlobalConstants.prefsName, 0);
 
@@ -403,8 +239,9 @@ int UNIX_LINES This constant specifies that a pattern matches Unix line endings 
 		isHandler = new Handler();
 
 		this.params = (EditText) activity.findViewById(paramsId);
-		this.outputText = (TextView) activity.findViewById(outputId);
-		this.scroller = (View) activity.findViewById(scrollerId);
+		//this.outputText = (TextView) activity.findViewById(outputId);
+		//this.scroller = (View) activity.findViewById(scrollerId);
+		this.list = (ListView)activity.findViewById(R.id.listView1);
 		this.pbar = (ProgressBar) activity.findViewById(pbarId);
 
 		this.mContext = mContext;
@@ -452,19 +289,8 @@ int UNIX_LINES This constant specifies that a pattern matches Unix line endings 
 		if ((TCPdumpReturn = tcpdump.start(params)) == 0) {
 			// if save to file, the outputText show  
 			if (settings.getBoolean("saveCheckbox", false) == true) {
-				
-				outputText.setText(
-						mContext.getString(R.string.standard_output_disabled)
-						+ GlobalConstants.dirName
-						+ "/"
-						+ settings.getString("fileText", capFileName)
-						);
-				
 			} else {//if not save to file, show on the scroll view
-				
-				outputText.setText(mContext.getString(R.string.standard_output_enabled));
 				startRefreshing();
-				
 			}
 			
 			setProgressbarVisible();

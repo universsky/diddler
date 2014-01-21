@@ -47,7 +47,7 @@ public class Main extends Activity {
 		// Associating the items in the view to the variables.
 		start_button = (Button) findViewById(R.id.start_button);
 		stop_button = (Button) findViewById(R.id.stop_button);
-		read_button = (Button) findViewById(R.id.read_button);
+//		read_button = (Button) findViewById(R.id.read_button);
 		parameters = (EditText) findViewById(R.id.params_text);
 
 		// Accessing the app's preferences.
@@ -117,14 +117,6 @@ public class Main extends Activity {
 			}
 		});
 
-		read_button.setOnClickListener(new OnClickListener() {
-			// Setting the action to perform when the open in reader button is
-			// pressed.
-			@Override
-			public void onClick(View v) {
-				launchReader();
-			}
-		});
 
 		BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
 			@Override
@@ -209,9 +201,7 @@ public class Main extends Activity {
 	 */
 	private void startTCPdump() {
 		if (tcpDumpHandler.checkNetworkStatus()) {
-			
 			setTitle("tcpdump " + parameters.getText().toString());
-			
 			switch (tcpDumpHandler.start(parameters.getText().toString())) {
 			case 0:
 				Toast.makeText(Main.this, getString(R.string.tcpdump_started),

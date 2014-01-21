@@ -13,6 +13,16 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
+		<activity android:name="universsky.diddler.ItemActivity" android:label="HTTP Request"
+			android:screenOrientation="portrait">
+			<intent-filter>
+				<action android:name="android.intent.action.CALL" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		
+		
 		<activity android:name="universsky.diddler.Options" android:label="Diddler Options"
 			android:screenOrientation="portrait">
 			<intent-filter>
