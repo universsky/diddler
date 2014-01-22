@@ -1,16 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="5dp"
     android:paddingRight="5dp" >
+    
+     <TextView
+         android:id="@+id/RequestURLView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentTop="true"
+         android:textStyle="bold"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
+         android:text="Request URL:"/>
+     
+     <TextView
+         android:id="@+id/urlView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentTop="true"
+         android:autoLink="web"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp" />
+     
+      <TextView
+         android:id="@+id/RequestMethodView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:textStyle="bold"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
+         android:text="Request Method: GET"/>
+      
+       <TextView
+         android:id="@+id/StatusCodeView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:textStyle="bold"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
+         android:text="Status Code: 200 OK"/>
+      
+     <TextView
+         android:id="@+id/RequestHeadersView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
+         android:textStyle="bold"
+         android:text="Request Headers:"/>
 
     <TextView
         android:id="@+id/itemView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 
-</RelativeLayout>
+</LinearLayout>
