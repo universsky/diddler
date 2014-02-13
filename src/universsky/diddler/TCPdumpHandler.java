@@ -59,7 +59,7 @@ public class TCPdumpHandler {
 	private int refreshRate = 100;
 	private int bufferSize = 1024;
 	private int countPackets = 0;
-	private int MAX_COUNT = 200;
+	private int MAX_COUNT = 100;
 
 	private boolean notificationEnabled = false;
 	private boolean refreshingActive = false;
@@ -77,6 +77,9 @@ public class TCPdumpHandler {
 	private EditText params = null;
 	private List<String> itemList = new ArrayList<String>();
 	private List<String> itemList2 = new ArrayList<String>();
+	private List<String> headList = new ArrayList<String>();
+	private List<String> timeList = new ArrayList<String>();
+	private List<String> sizeList = new ArrayList<String>();
 	private ListView list = null;
 	private Activity activity = null;
 	
@@ -120,6 +123,8 @@ public class TCPdumpHandler {
 							// 把itemList置空
 							itemList.clear();	
 							itemList2.clear();
+							timeList.clear();
+							sizeList.clear();
 						}
 						
 						
@@ -135,6 +140,9 @@ public class TCPdumpHandler {
 					 * 正则匹配出需要的数据包段
 					 */
 					
+					
+					
+					
 					String pStr = "GET\\s+[\\x00-\\x7F]*\\nHost:[\\x00-\\x7F]*\\n\\n";
 //					String pStr = "GET\\s+[\\x00-\\x7F]*";
 					Pattern p = Pattern.compile(pStr);
@@ -148,18 +156,61 @@ public class TCPdumpHandler {
 						itemList.add(item);
 //						mStr += "\n[" + countPackets + "]" + 
 //								bufferStr.substring(s, e);
-						countPackets++;
+						//countPackets++;
 					}
 					
 					//outputText.append(mStr);
+					
+					/**
+					 * @author chenguangjian
+					 * 		   2014.2.13
+					 * 正则匹配出时间，数据包size
+					 */
+					
+					// 匹配出时间，数据包size
+					/**
+					 * 21:08:36.858454 IP (tos 0x0, ttl 64, id 65431, offset 0, flags [DF], proto TCP (6), length 516)
+					 * 21:08:37.124116 IP (tos 0x0, ttl 64, id 2825, offset 0, flags [DF], proto TCP (6), length 925)
+					 * 21:08:37.233624 IP (tos 0x0, ttl 64, id 13606, offset 0, flags [DF], proto TCP (6), length 401)
+					 */
+					String regexHead = "\\d{2}\\:\\d{2}\\:\\d{2}\\.\\d{6}\\sIP\\s\\((.*)length\\s\\d+\\)";
+//					String pStr = "GET\\s+[\\x00-\\x7F]*";
+					Pattern pHead = Pattern.compile(regexHead);
+					Matcher mHead = pHead.matcher(bufferStr);
+//					String mStr = "";
+					while(mHead.find()){
+						String Head = "";
+						int s = mHead.start();
+						int e = mHead.end();
+						Head = bufferStr.substring(s, e);
+						headList.add(Head);
+//						String time = Head.substring(0, Head.indexOf("IP"));
+						String time = Head.substring(0, 15);
+						timeList.add(time);
+						String size = Head.substring(Head.indexOf("length") + 7, Head.length()-1);
+						sizeList.add(size);
+					}
 					
 					final ArrayList<HashMap<String,Object>> listItem = new ArrayList<HashMap<String,Object>>();
 					final ArrayList<HashMap<String,Object>> listItem2 = new ArrayList<HashMap<String,Object>>();
 					for(int i = 0; i < itemList.size(); i++){
 						HashMap<String,Object> map = new HashMap<String,Object>();
-						java.text.DateFormat fmt = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-						String s =  fmt.format(new Date());
-						map.put("item_title", "[ " + s + "]" + "第" + i + "个HTTP请求:  " );
+						//java.text.DateFormat fmt = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+						//String s =  fmt.format(new Date());
+						String time = timeList.get(i);
+						String title = "[ " + time + " ]" + " 第" + (countPackets++) + "个HTTP请求: ";
+						String size = sizeList.get(i);
+						
+						if ( Integer.parseInt(size) < 1024){
+							title += size + " B"; 
+						}else {
+							double dSize = Integer.parseInt(size)/1024.0;
+							//%[index$][标识][最少宽度][.精度]转换方式
+							String sSize = String.format("%1$-2.1f", dSize);
+							title += sSize + " KB";
+						}
+						
+						map.put("item_title", title );
 						
 						//获取GET path
 						String item = itemList.get(i);
