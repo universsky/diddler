@@ -51,12 +51,21 @@
          android:paddingRight="5dp"
          android:textStyle="bold"
          android:text="Request Headers:"/>
+     
+     <ScrollView
+	    android:id="@+id/SCROLLER_ID"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:scrollbars="vertical"
+	    android:fillViewport="true">  
 
-    <TextView
-        android:id="@+id/itemView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
+		    <TextView
+		        android:id="@+id/itemView1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:clickable="true"
+		        android:paddingLeft="10dp"
+		        android:paddingRight="10dp" />
+    </ScrollView>  
 
 </LinearLayout>

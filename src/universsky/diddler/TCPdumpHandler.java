@@ -192,7 +192,8 @@ public class TCPdumpHandler {
 							);
 					//Sets the data behind this ListView. 
 					list.setAdapter(listItemAdapter);
-					
+					//选中listview的指定列，选中了，自然就得让这个item可见，自然就滚动咯  
+					list.setSelection(list.getBottom());
 					 //添加点击  
 			        list.setOnItemClickListener(new OnItemClickListener(){
 						@Override
@@ -200,9 +201,7 @@ public class TCPdumpHandler {
 								long arg3) {
 							CharSequence item = (CharSequence) listItem2.get(arg2).get("item_text0");
 							//Open Declaration Toast android.widget.Toast.makeText(Context context, CharSequence text, int duration)
-							
 							//Toast.makeText(mContext, item, Toast.LENGTH_LONG).show();
-							
 							Intent intent=new Intent();
 							intent.setClass( activity, ItemActivity.class );
 							Bundle mBundle=new Bundle();
